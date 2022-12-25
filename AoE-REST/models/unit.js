@@ -54,7 +54,17 @@ class Unit {
       .collection("units")
       .find()
       .toArray()
-      .then((result) => console.log("db", result[0]))
+      .then()
+      .catch((err) => console.log(err));
+  }
+
+  static fetchById(unitId) {
+    const db = getDb();
+    return db
+      .collection("units")
+      .find({ id: parseInt(unitId) })
+      .next()
+      .then()
       .catch((err) => console.log(err));
   }
 }

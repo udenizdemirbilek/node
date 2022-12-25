@@ -1,11 +1,12 @@
-const units = require("../age-of-empires-units.json");
 const Unit = require("../models/unit");
 
 exports.getUnits = (req, res, next) => {
-  Unit.fetchAll();
-  // res.status(200).json(units);
+  Unit.fetchAll().then((result) => res.status(200).json({ units: result }));
 };
 
-exports.getUnitDetailsById = (req, res, next) => {};
+exports.getUnitDetailsById = (req, res, next) => {
+  const unitId = req.params.unitId;
+  Unit.fetchById(unitId).then((result) => res.status(200).json(result));
+};
 
 exports.getUnits;
