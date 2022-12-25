@@ -6,4 +6,6 @@ const router = express.Router();
 
 router.get("/", unitController.getUnits);
 
+router.get("/details/:unitId", unitController.getUnitDetailsById);
+
 module.exports = router;

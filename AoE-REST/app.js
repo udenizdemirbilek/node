@@ -1,12 +1,17 @@
 const express = require("express");
 
+const mongoConnect = require("./util/database").mongoConnect;
 const unitRoutes = require("./routes/units");
 
-const db = require("./util/database");
-
 const app = express();
+
+app.use((req, res, next) => {
+  next();
+});
 
 // GET /units
 app.use("/units", unitRoutes);
 
-app.listen(8080);
+mongoConnect(() => {
+  app.listen(3000);
+});
