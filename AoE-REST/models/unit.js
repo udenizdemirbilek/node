@@ -1,3 +1,5 @@
+const mongodb = require("mongodb");
+
 const getDb = require("../util/database").getDb;
 class Unit {
   constructor(
@@ -20,7 +22,7 @@ class Unit {
     accuracy,
     search_radius
   ) {
-    this.id = id;
+    this._id = id ? new mongodb.ObjectId(id) : null;
     this.name = name;
     this.description = description;
     this.expansion = expansion;
@@ -42,8 +44,13 @@ class Unit {
 
   save() {
     const db = getDb();
-    db.collection("units")
-      .insertOne(this)
+    let dbOp;
+    if (this.id) {
+      dbOp = db
+        .collection("units")
+        .updateOne({ _id: new mongodb.ObjectId(this._id) }, { $set: this });
+    } else dbOp = db.collection("units").insertOne(this);
+    return dbOp
       .then((result) => console.log(result))
       .catch((err) => console.log(err));
   }
@@ -53,6 +60,12 @@ class Unit {
     return db
       .collection("units")
       .find()
+      .project({
+        id: 1,
+        name: 1,
+        age: 1,
+        cost: 1,
+      })
       .toArray()
       .then()
       .catch((err) => console.log(err));
@@ -62,8 +75,16 @@ class Unit {
     const db = getDb();
     return db
       .collection("units")
-      .find({ id: parseInt(unitId) })
+      .find({ _id: mongodb.ObjectId(unitId) })
       .next()
+      .then()
+      .catch((err) => console.log(err));
+  }
+
+  static deleteById(unitId) {
+    const db = getDb();
+    db.collection("units")
+      .deleteOne({ _id: mongodb.ObjectId(unitId) })
       .then()
       .catch((err) => console.log(err));
   }
