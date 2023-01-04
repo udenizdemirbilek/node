@@ -50,9 +50,7 @@ class Unit {
         .collection("units")
         .updateOne({ _id: new mongodb.ObjectId(this._id) }, { $set: this });
     } else dbOp = db.collection("units").insertOne(this);
-    return dbOp
-      .then((result) => console.log(result))
-      .catch((err) => console.log(err));
+    return dbOp.then().catch((err) => console.log(err));
   }
 
   static fetchAll() {
